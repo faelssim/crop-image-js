@@ -1,0 +1,11 @@
+{
+  "name": "crop-image-js",
+  "version": "1.0.0",
+  "description": "一个裁剪图片的小插件，使用原生canvas。无其他依赖！",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "wangkun",
+  "license": "ISC"
+}
