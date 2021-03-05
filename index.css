@@ -13,7 +13,7 @@
     background: #fff;
     border-radius: 5px;
     overflow: hidden;
-    width: 450px;
+    width: 470px;
   }
   .cropper-box > div > div {
     width: 100%;
@@ -23,11 +23,11 @@
     align-items: center;
     justify-content: space-between;
     box-sizing: border-box;
-    padding: 10px;
+    padding: 10px 20px;
     font-size: 14px;
     border-bottom: 1px solid #f2f2f2;
   }
-  .cropper-box > div .c-b-header i {
+  .cropper-box > div .c-b-header span {
     cursor: pointer;
     color: #999;
   }
@@ -36,16 +36,16 @@
     align-items: center;
     justify-content: flex-end;
     box-sizing: border-box;
-    padding: 10px;
+    padding: 10px 20px;
     border-top: 1px solid #f2f2f2;
   }
   .cropper-box > div .c-b-footer button {
     cursor: pointer;
   }
   .cropper-box > div .c-b-mid {
-    height: 450px;
+    height: 470px;
     box-sizing: border-box;
-    padding: 10px;
+    padding: 20px;
     position: relative;
   }
   .cropper-box > div .c-b-mid > div {

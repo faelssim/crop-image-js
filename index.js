@@ -39,10 +39,10 @@ Cropper.prototype._createHTML = function () {
                     </div>
                 </div>
                 <div class="c-b-footer">
-                    <button>确定</button>
+                    <button class="cropper-box-confirm">确定</button>
                 </div>
             </div>
-            <canvas id="cvs" style="display:none;"></canvas>   
+            <canvas id="cvs" style="display: none;"></canvas>   
         </div>`
     );
 }
@@ -50,9 +50,12 @@ Cropper.prototype._render = function () {
     const HTML = this._createHTML();
     const dom = document.createElement('div');
     dom.innerHTML = HTML;
-    document.body.appendChild(dom.children[0]);
+    this._el = dom.children[0];
+    document.body.appendChild(this._el);
     // 关闭的按钮
     this._closeBtn = document.querySelector('.cropper-box-close');
+    // 确定按钮
+    this._confirmBtn = document.querySelector('.cropper-box-confirm');
     // 可裁剪区域
     this._clipArea = document.querySelector('.c-b-main');
     // 裁剪框
@@ -70,10 +73,12 @@ Cropper.prototype._createImage = function() {
     img.src = this.options.src;
     img.onload = () => {
         const cvs = this._canvas;
+        const cvs_cxt = cvs.getContext('2d');
         this._ori_img_width = img.width;
         this._ori_img_height = img.height;
-        cvs.setAttribute('width', this.ori_img_width);
-        cvs.setAttribute('height', this.ori_img_height);
+        console.log(this._ori_img_height, this._ori_img_width)
+        cvs.setAttribute('width', this._ori_img_width);
+        cvs.setAttribute('height', this._ori_img_height);
         if (img.width >= img.height) {
             this._box_width = OFFSET_SIZE; // 可裁剪区域宽
             this._box_height = OFFSET_SIZE * img.height / img.width; // 可裁剪区域高
@@ -89,6 +94,7 @@ Cropper.prototype._createImage = function() {
             this._crop_top = (OFFSET_SIZE - this._crop_width) / 2;
             this._crop_left = 0;
         }
+        cvs_cxt.drawImage(img, 0, 0, this._ori_img_width, this._ori_img_height);
         this._clipArea.style = `width: ${this._box_width}px;height: ${this._box_height}px;background-image: url(${img.src});`;
         // 设置裁剪框样式
         this._setCropBox();
@@ -109,6 +115,8 @@ Cropper.prototype._setMouseEvents = function () {
         e.stopPropagation(); // 阻止冒泡
         self._mousedown(e, this);
     });
+    this._closeBtn.addEventListener('click', () => this._close());
+    this._confirmBtn.addEventListener('click', () => this._confirm());
 }
 Cropper.prototype._mousedown = function (e, self) {
     const type = self.getAttribute('data-type');
@@ -151,11 +159,37 @@ Cropper.prototype._mouseup = function (e) {
     const { _proto: self, _type } = this;
     document.body.removeEventListener('mousemove', self._mousemove);
 }
-Cropper.prototype.getBase64 = function() {
-    if (!this.options.src || typeof(this.options.src) !== 'string') {
-        console.log('%c请传递一个图片的路径或者base64字符串', 'background:red;color:#fff;padding:2px 7px;');
-    } else {
-
+Cropper.prototype._close = function () {
+    this._el && document.body.removeChild(this._el);
+}
+Cropper.prototype._confirm = function () {
+    const base64 = this.getBase64();
+    this.options.ok && this.options.ok(base64);
+    this._close();
+}
+// 获取裁剪的真实宽高和位置
+Cropper.prototype._getClipData = function () {
+    return {
+        x: this._crop_left * this._ori_img_width / this._box_width,
+        y: this._crop_top * this._ori_img_height / this._box_height,
+        w: this._crop_width * this._ori_img_width / this._box_width,
+        h: this._crop_height * this._ori_img_height / this._box_height
     }
+}
+Cropper.prototype.getBase64 = function() {
+    const { x, y, w, h } = this._getClipData();
+    const cvs = this._canvas;
+    const cvs_cxt = cvs.getContext('2d');
+    // 获取裁剪的像素点
+    const imgData = cvs_cxt.getImageData(x, y, w, h);
+    // 清除原画布
+    cvs_cxt.clearRect(0, 0, this._ori_img_width, this._ori_img_height);
+    // 重新设置画布大小
+    cvs.setAttribute('width', w);
+    cvs.setAttribute('height', h);
+    // 将原来的像素点放置到重置后的画布
+    cvs_cxt.putImageData(imgData, 0, 0, 0, 0, w, h);
+    // 导出base64
+    return cvs.toDataURL();
 }
 export default Cropper;
