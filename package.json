@@ -1,6 +1,6 @@
 {
   "name": "crop-image-js",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "一个裁剪图片的小插件，使用原生canvas。无其他依赖！",
   "main": "index.js",
   "repository": {
