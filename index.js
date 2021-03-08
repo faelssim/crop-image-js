@@ -39,7 +39,9 @@ Cropper.prototype._createHTML = function () {
                     </div>
                 </div>
                 <div class="c-b-footer">
-                    <button class="cropper-box-confirm">确定</button>
+                    <button class="cropper-box-confirm">
+                        <span>确定</span>
+                    </button>
                 </div>
             </div>
             <canvas id="cvs" style="display: none;"></canvas>   
@@ -76,7 +78,6 @@ Cropper.prototype._createImage = function() {
         const cvs_cxt = cvs.getContext('2d');
         this._ori_img_width = img.width;
         this._ori_img_height = img.height;
-        console.log(this._ori_img_height, this._ori_img_width)
         cvs.setAttribute('width', this._ori_img_width);
         cvs.setAttribute('height', this._ori_img_height);
         if (img.width >= img.height) {
@@ -163,9 +164,13 @@ Cropper.prototype._close = function () {
     this._el && document.body.removeChild(this._el);
 }
 Cropper.prototype._confirm = function () {
-    const base64 = this.getBase64();
-    this.options.ok && this.options.ok(base64);
-    this._close();
+    this._confirmBtn.setAttribute('disabled', true);
+    setTimeout(() => {
+        const base64 = this.getBase64();
+        this.options.ok && this.options.ok(base64);
+        this._confirmBtn.removeAttribute('disabled');
+        this._close();
+    }, 0);
 }
 // 获取裁剪的真实宽高和位置
 Cropper.prototype._getClipData = function () {

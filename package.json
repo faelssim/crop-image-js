@@ -1,8 +1,12 @@
 {
   "name": "crop-image-js",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "一个裁剪图片的小插件，使用原生canvas。无其他依赖！",
   "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com:wk0606/crop-image-js.git"
+  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },

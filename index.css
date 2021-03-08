@@ -42,6 +42,24 @@
   .cropper-box > div .c-b-footer button {
     cursor: pointer;
   }
+  .cropper-box > div .c-b-footer button span {
+    color: #333;
+    display: flex;
+    align-items: center;
+  }
+  .cropper-box > div .c-b-footer button[disabled=true] {
+    background-image: url(./Rolling.svg);
+    background-size: 15px;
+    background-position: 5px center;
+    background-repeat: no-repeat;
+    padding-left: 20px;
+    outline: none;
+    border: 1px solid #d8d8d8;
+    border-radius: 3px;
+  }
+  .cropper-box > div .c-b-footer button[disabled=true] span {
+    color: #999;
+  }
   .cropper-box > div .c-b-mid {
     height: 470px;
     box-sizing: border-box;
