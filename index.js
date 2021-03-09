@@ -160,8 +160,9 @@ Cropper.prototype._mouseup = function (e) {
     const { _proto: self, _type } = this;
     document.body.removeEventListener('mousemove', self._mousemove);
 }
-Cropper.prototype._close = function () {
+Cropper.prototype._close = function (isCallback = true) {
     this._el && document.body.removeChild(this._el);
+    isCallback && this.options.cancel && this.options.cancel();
 }
 Cropper.prototype._confirm = function () {
     this._confirmBtn.setAttribute('disabled', true);
@@ -169,7 +170,7 @@ Cropper.prototype._confirm = function () {
         const base64 = this.getBase64();
         this.options.ok && this.options.ok(base64);
         this._confirmBtn.removeAttribute('disabled');
-        this._close();
+        this._close(false);
     }, 0);
 }
 // 获取裁剪的真实宽高和位置
